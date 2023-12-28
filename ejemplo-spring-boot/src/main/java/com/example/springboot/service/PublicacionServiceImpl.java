@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.springboot.dto.PublicacionDTO;
@@ -29,10 +32,14 @@ public class PublicacionServiceImpl implements PublicacionService {
     }
 
     // cargar todos los registros
+    // se añadio el paginado  para  cargar   ciertos  registros  por pagina  y no s
     @Override
-    public List<PublicacionDTO> obtenerTodasLasPublicaciones() {
-        List<Publicacion> publicaciones = publicacionRepository.findAll();
-        return publicaciones.stream().map(publicacion -> mapearDTO(publicacion)).collect(Collectors.toList());
+    public List<PublicacionDTO> obtenerTodasLasPublicaciones(int numeroDePagina, int medidaDePagina) {
+
+        Pageable pageable = PageRequest.of(numeroDePagina, medidaDePagina);
+        Page<Publicacion> publicaciones = publicacionRepository.findAll(pageable);
+        List<Publicacion> ListaDePublicaciones = publicaciones.getContent();
+        return ListaDePublicaciones.stream().map(publicacion -> mapearDTO(publicacion)).collect(Collectors.toList());
     }
 
     // ESTE METODO CONVIERTE DE ENTIDAD A DTO
