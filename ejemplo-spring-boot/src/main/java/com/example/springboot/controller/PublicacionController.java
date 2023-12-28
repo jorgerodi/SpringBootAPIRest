@@ -3,6 +3,7 @@ package com.example.springboot.controller;
 import com.example.springboot.dto.PublicacionDTO;
 import com.example.springboot.dto.PublicacionRespuesta;
 import com.example.springboot.service.PublicacionService;
+import com.example.springboot.utilities.AppConstantes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,10 @@ public class PublicacionController {
     // POR PAGINA
     @GetMapping
     public PublicacionRespuesta listarPublicaciones(
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int numeroDePagina,
-            @RequestParam(value = "pageZise", defaultValue = "20", required = false) int medidaDePagina,
-            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String ordenarPor,
-            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir){
+            @RequestParam(value = "pageNumber", defaultValue = AppConstantes.NUMERO_DE_PAGINA_POR_DEFECTO, required = false) int numeroDePagina,
+            @RequestParam(value = "pageZise", defaultValue = AppConstantes.MEDIDA_DE_PAGINA_POR_DEFECTO, required = false) int medidaDePagina,
+            @RequestParam(value = "sortBy", defaultValue = AppConstantes.ORDENAR_POR_DEFECTO, required = false) String ordenarPor,
+            @RequestParam(value = "sortDir", defaultValue = AppConstantes.ORDENAR_DIRECCION_POR_DEFECTO, required = false) String sortDir){
         return publicacionService.obtenerTodasLasPublicaciones(numeroDePagina, medidaDePagina, ordenarPor, sortDir);
     }
 
