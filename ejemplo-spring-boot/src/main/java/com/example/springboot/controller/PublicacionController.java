@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class PublicacionController {
     @Autowired
     private PublicacionService publicacionService;
-
+ 
     @PostMapping
     public ResponseEntity<PublicacionDTO> guardarPublicacion(@RequestBody PublicacionDTO publicacionDTO) {
         // Realiza cualquier validación necesaria antes de crear la publicación
