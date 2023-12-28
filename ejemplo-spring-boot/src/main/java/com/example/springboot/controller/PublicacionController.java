@@ -1,9 +1,8 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.PublicacionDTO;
+import com.example.springboot.dto.PublicacionRespuesta;
 import com.example.springboot.service.PublicacionService;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,12 +22,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class PublicacionController {
     @Autowired
     private PublicacionService publicacionService;
-// SE AGREGAN DOS  REQUESTPARAM PARA  PAGINAR  LA CONSULTA  Y OBTENER  LOS REGISTROS POR PAGINA 
+
+    // SE AGREGAN DOS REQUESTPARAM PARA PAGINAR LA CONSULTA Y OBTENER LOS REGISTROS
+    // POR PAGINA
     @GetMapping
-    public List<PublicacionDTO> listarPublicaciones(
+    public PublicacionRespuesta listarPublicaciones(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int numeroDePagina,
-            @RequestParam(value = "pageZise", defaultValue = "20", required = false) int medidaDePagina) {
-        return publicacionService.obtenerTodasLasPublicaciones(numeroDePagina, medidaDePagina);
+            @RequestParam(value = "pageZise", defaultValue = "20", required = false) int medidaDePagina,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String ordenarPor,
+            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir){
+        return publicacionService.obtenerTodasLasPublicaciones(numeroDePagina, medidaDePagina, ordenarPor, sortDir);
     }
 
     @PostMapping
