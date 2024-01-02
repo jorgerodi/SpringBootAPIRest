@@ -20,7 +20,6 @@ import com.example.springboot.repository.PublicacionRepository;
 @Service
 public class ComentarioServicioImpl implements ComentarioServicio {
 
-
     @Autowired
     ModelMapper modelMaper;
     @Autowired
@@ -38,9 +37,64 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         return mapearDTO(nuevoComentario);
     }
 
-  
+   
 
-    // MAPEAR DE ENTIDAD A DTO
+    @Override
+    public List<ComentarioDTO> obtenerComentarioPorPubliucacionId(Long publicacionId) {
+        List<Comentario> comentarios = comentarioRepositorio.findByPublicacionId(publicacionId);
+
+        return comentarios.stream().map(comentario -> mapearDTO(comentario)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ComentarioDTO obtenerComentarioPorId(Long publicacionId, Long comentarioId) {
+        Publicacion publicacion = publicacionRepository.findById(publicacionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Publicacion", "id", publicacionId));
+        Comentario comentario = comentarioRepositorio.findById(comentarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comentario", "id", comentarioId));
+
+        if (!comentario.getPublicacion().getId().equals(publicacion.getId())) {
+            throw new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece  a la pulicacion ");
+        }
+        return mapearDTO(comentario);
+
+    }
+
+    @Override
+    public ComentarioDTO actualizarComentario(Long publicacionId, Long comentarioId,
+            ComentarioDTO solicitudComentario) {
+        Publicacion publicacion = publicacionRepository.findById(publicacionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Publicacion", "id", publicacionId));
+        Comentario comentario = comentarioRepositorio.findById(comentarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comentario", "id", comentarioId));
+
+        if (!comentario.getPublicacion().getId().equals(publicacion.getId())) {
+            throw new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece  a la pulicacion ");
+        }
+        comentario.setNombre((solicitudComentario.getNombre()));
+        comentario.setEmail(solicitudComentario.getEmail());
+        comentario.setCuerpo(solicitudComentario.getCuerpo());
+        Comentario comentarioActualizado = comentarioRepositorio.save(comentario);
+
+        return mapearDTO(comentarioActualizado);
+    }
+
+    @Override
+    public void eliminarComentario(Long publicacionId, Long comentarioId) {
+        Publicacion publicacion = publicacionRepository.findById(publicacionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Publicacion", "id", publicacionId));
+        Comentario comentario = comentarioRepositorio.findById(comentarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comentario", "id", comentarioId));
+
+        if (!comentario.getPublicacion().getId().equals(publicacion.getId())) {
+            throw new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece  a la pulicacion ");
+        }
+        comentarioRepositorio.delete(comentario);
+
+    }
+
+
+     // MAPEAR DE ENTIDAD A DTO
     private ComentarioDTO mapearDTO(Comentario comentario) {
         ComentarioDTO comentarioDTO = modelMaper.map(comentario, ComentarioDTO.class);
         return comentarioDTO;
@@ -52,64 +106,5 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         Comentario comentario = modelMaper.map(comentarioDTO, Comentario.class);
         return comentario;
 
-    
-}
-
-    @Override
-    public List<ComentarioDTO> obtenerComentarioPorPubliucacionId(Long publicacionId) {
-     List <Comentario> comentarios = comentarioRepositorio.findByPublicacionId(publicacionId);
-
-       return comentarios.stream().map(comentario -> mapearDTO(comentario)).collect(Collectors.toList());    
-}
-   @Override
-    public ComentarioDTO obtenerComentarioPorId(Long publicacionId, Long comentarioId) {
-         Publicacion publicacion = publicacionRepository.findById(publicacionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Publicacion", "id", publicacionId));
-                Comentario comentario = comentarioRepositorio.findById(comentarioId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comentario", "id", comentarioId));
-            
-                
-                if(!comentario.getPublicacion().getId().equals(publicacion.getId())){
-                    throw new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece  a la pulicacion ");
-                }
-                return mapearDTO(comentario);
-
-    }
-
-
-    @Override
-    public ComentarioDTO actualizarComentario(Long publicacionId, Long comentarioId ,ComentarioDTO solicitudComentario) {
-      Publicacion publicacion = publicacionRepository.findById(publicacionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Publicacion", "id", publicacionId));
-                Comentario comentario = comentarioRepositorio.findById(comentarioId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comentario", "id", comentarioId));
-            
-                
-                if(!comentario.getPublicacion().getId().equals(publicacion.getId())){
-                    throw new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece  a la pulicacion ");
-                }
-               comentario.setNombre((solicitudComentario.getNombre()));
-               comentario.setEmail(solicitudComentario.getEmail());
-               comentario.setCuerpo(solicitudComentario.getCuerpo());
-               Comentario comentarioActualizado = comentarioRepositorio.save(comentario);
-
-            return mapearDTO(comentarioActualizado);
-}
-
-
-
-    @Override
-    public void eliminarComentario(Long publicacionId, Long comentarioId) {
-         Publicacion publicacion = publicacionRepository.findById(publicacionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Publicacion", "id", publicacionId));
-                Comentario comentario = comentarioRepositorio.findById(comentarioId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comentario", "id", comentarioId));
-            
-                
-                if(!comentario.getPublicacion().getId().equals(publicacion.getId())){
-                    throw new BlogAppException(HttpStatus.BAD_REQUEST, "El comentario no pertenece  a la pulicacion ");
-                }
-                comentarioRepositorio.delete(comentario);
-   
     }
 }

@@ -3,9 +3,12 @@ package com.example.springboot.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,8 +31,9 @@ public class Publicacion {
 
     @Column(name = "contenido", nullable = false)
     private String contenido;
-
-    @OneToMany(mappedBy = "publicacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    
+    @JsonBackReference 
+   @OneToMany(mappedBy = "publicacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Comentario> comentarios  = new HashSet<>();
 
     public Long getId() {
@@ -64,15 +68,17 @@ public class Publicacion {
         this.contenido = contenido;
     }
 
-    public Publicacion(Long id, String titulo, String descripcion, String contenido) {
-        super();
-        this.id = id;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.contenido = contenido;
-    }
+   
 
     public Publicacion() {
+    }
+
+    public Set<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(Set<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
 
 }

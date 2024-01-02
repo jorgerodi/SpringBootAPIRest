@@ -1,20 +1,17 @@
 package com.example.springboot.dto;
+import com.example.springboot.entity.*;
+import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PublicacionDTO {
-    @JsonProperty("id")
+   
     private Long id;
-
-	@JsonProperty("titulo")
     private String titulo;
-
-    @JsonProperty("descripcion")
     private String descripcion;
-
-
-    @JsonProperty("contenido")
     private String contenido;
+    private Set<Comentario> comentarios;
+
+
     public PublicacionDTO() {
 
     }
@@ -39,7 +36,13 @@ public class PublicacionDTO {
     public Long getId() {
         return id;
     }
+    public Set<Comentario> getComentarios() {
+        return comentarios;
+    }
     public void setId(Long id) {
         this.id = id;
+    }
+    public void setComentarios(Set<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
 }
