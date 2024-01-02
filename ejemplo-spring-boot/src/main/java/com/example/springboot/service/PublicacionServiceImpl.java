@@ -3,6 +3,7 @@ package com.example.springboot.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,9 @@ import com.example.springboot.repository.PublicacionRepository;
 
 @Service
 public class PublicacionServiceImpl implements PublicacionService {
+
+    @Autowired
+    ModelMapper modelMaper;
 
     @Autowired
     public PublicacionRepository publicacionRepository;
@@ -53,25 +57,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         return publicacionRespuesta;
     }
 
-    // ESTE METODO CONVIERTE DE ENTIDAD A DTO
-    private PublicacionDTO mapearDTO(Publicacion publicacion) {
-        PublicacionDTO publicacionDTO = new PublicacionDTO();
-        publicacionDTO.setId(publicacion.getId());
-        publicacionDTO.setTitulo(publicacion.getTitulo());
-        publicacionDTO.setDescripcion(publicacion.getDescripcion());
-        publicacionDTO.setContenido(publicacion.getContenido());
-        return publicacionDTO;
-    }
-
-    // ESTE METODO CONVIERTE DE DTO A ENTIDAD
-    private Publicacion mapearEntidad(PublicacionDTO publicacionDTO) {
-        Publicacion publicacion = new Publicacion();
-        publicacion.setTitulo(publicacionDTO.getTitulo());
-        publicacion.setDescripcion(publicacionDTO.getDescripcion());
-        publicacion.setContenido(publicacionDTO.getContenido());
-
-        return publicacion;
-    }
+   
 
     @Override
     public PublicacionDTO obtenerPublicacionPorID(long id) {
@@ -99,6 +85,18 @@ public class PublicacionServiceImpl implements PublicacionService {
                 publicacionRepository.delete(publicacion);
     }
 
+  // ESTE METODO CONVIERTE DE ENTIDAD A DTO
+    private PublicacionDTO mapearDTO(Publicacion publicacion) {
+      PublicacionDTO publicacionDTO = modelMaper.map(publicacion, PublicacionDTO.class);
 
+        return publicacionDTO;
+    }
+
+    // ESTE METODO CONVIERTE DE DTO A ENTIDAD
+    private Publicacion mapearEntidad(PublicacionDTO publicacionDTO) {
+        Publicacion publicacion  = modelMaper.map(publicacionDTO, Publicacion.class);
+
+        return publicacion;
+    }
 
 }
