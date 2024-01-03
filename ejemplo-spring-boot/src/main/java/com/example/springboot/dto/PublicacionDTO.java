@@ -1,14 +1,26 @@
 package com.example.springboot.dto;
 import com.example.springboot.entity.*;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import java.util.Set;
 
 
 public class PublicacionDTO {
    
+   
     private Long id;
+     @NotEmpty
+     @Size(min = 2, message = "El titulo de la publicacion  deberia  tener  al menos  2  caracteres")
     private String titulo;
+      @NotEmpty
+     @Size(min = 10, message = "La descripcion de la publicacion deberioa tener  minimo 10 caracteres")
     private String descripcion;
+   
+    @NotEmpty(message = "El contenido de la publicacion no debe estar vacio ")
     private String contenido;
+
     private Set<Comentario> comentarios;
 
 

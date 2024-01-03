@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.springboot.dto.ComentarioDTO;
 import com.example.springboot.service.ComentarioServicio;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,13 +45,13 @@ public class ComentarioController {
     
      // ENDPOINT PARA GUARDAR COMENTARIO 
     @PostMapping("/publicaciones/{publicacionId}/comentarios")
-    public ResponseEntity<ComentarioDTO> guardarComentario(@PathVariable(value = "publicacionId") long publicacionId, @RequestBody ComentarioDTO comentarioDTO ){
+    public ResponseEntity<ComentarioDTO> guardarComentario(@PathVariable(value = "publicacionId") long publicacionId,@Valid @RequestBody ComentarioDTO comentarioDTO ){
             return new  ResponseEntity<>(comentarioServicio.crearComentario(publicacionId, comentarioDTO),HttpStatus.CREATED);
         
     }
 
     @PutMapping("/publicaciones/{publicacionId}/comentarios/{id}")
-    public ResponseEntity<ComentarioDTO> actualizarComentario(@PathVariable(value = "publicacionId") Long publicacionId, @PathVariable(value = "id") Long comentarioId,  @RequestBody ComentarioDTO comentarioDTO){
+    public ResponseEntity<ComentarioDTO> actualizarComentario( @PathVariable(value = "publicacionId") Long publicacionId, @PathVariable(value = "id") Long comentarioId,@Valid  @RequestBody ComentarioDTO comentarioDTO){
         ComentarioDTO comentarioActualizado = comentarioServicio.actualizarComentario(publicacionId, comentarioId, comentarioDTO);
         return new ResponseEntity<>(comentarioActualizado, HttpStatus.OK);
     }

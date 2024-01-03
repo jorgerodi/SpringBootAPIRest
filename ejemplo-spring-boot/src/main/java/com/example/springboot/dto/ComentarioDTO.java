@@ -1,10 +1,21 @@
 package com.example.springboot.dto;
 
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 public class ComentarioDTO {
 
     private  long id;
+    @NotEmpty(message = "EL nombre no puede estar vacio")
     private String nombre;
+   
+    @NotEmpty(message = "El email no debe  estar vacio o nulo ")
+    @Email
     private String email;
+    @NotEmpty
+    @Size(min = 10,  message= "El cuerpo del comentario debe contener al menos 10 caracteres")
     private String cuerpo;
     
     public ComentarioDTO() {

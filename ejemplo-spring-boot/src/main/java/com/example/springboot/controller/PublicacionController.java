@@ -5,6 +5,8 @@ import com.example.springboot.dto.PublicacionRespuesta;
 import com.example.springboot.service.PublicacionService;
 import com.example.springboot.utilities.AppConstantes;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,7 @@ public class PublicacionController {
     }
 
     @PostMapping
-    public ResponseEntity<PublicacionDTO> guardarPublicacion(@RequestBody PublicacionDTO publicacionDTO) {
+    public ResponseEntity<PublicacionDTO> guardarPublicacion(@Valid @RequestBody PublicacionDTO publicacionDTO) {
         // Realiza cualquier validación necesaria antes de crear la publicación
 
         // Llama al servicio para crear la publicación y devuelve la respuesta
@@ -52,7 +54,7 @@ public class PublicacionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PublicacionDTO> actualizarPublicacion(@RequestBody PublicacionDTO publicacionDTO,
+    public ResponseEntity<PublicacionDTO> actualizarPublicacion(@Valid @RequestBody PublicacionDTO publicacionDTO,
             @PathVariable(name = "id") long id) {
 
         PublicacionDTO publicacionResponse = publicacionService.actualizarPublicacion(publicacionDTO, id);
